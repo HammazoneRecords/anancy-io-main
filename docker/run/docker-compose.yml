@@ -1,0 +1,8 @@
+services:
+  anancyio:
+    container_name: anancyio
+    image: anancyioai/anancyio:latest
+    volumes:
+      - ./anancyio:/a_io
+    ports:
+      - "50080:80"
