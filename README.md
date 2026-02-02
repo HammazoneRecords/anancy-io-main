@@ -355,8 +355,4 @@ Default models set to gpt-4.1
 - **Reflection Prompts**
 - **Bug Fixes**
 
-## 🤝 Community and Support
 
-- [Join our Discord](https://discord.gg/B8KZKNsPpj) for live discussions or [visit our Skool Community](https://www.skool.com/anancyio).
-- [Follow our YouTube channel](https://www.youtube.com/@AgentZeroFW) for hands-on explanations and tutorials
-- [Report Issues](https://github.com/anancyioai/anancyio/issues) for bug fixes and features
