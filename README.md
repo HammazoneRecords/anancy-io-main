@@ -33,10 +33,6 @@ This project is not just a tool - it's the beginning of a transformative journey
 [Documentation](./docs/README.md) •
 [Usage](./docs/usage.md)
 
-Or see DeepWiki generated documentation:
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/anancyioai/anancyio)
-
 </div>
 
 
