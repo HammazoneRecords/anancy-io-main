@@ -1,0 +1,18 @@
+# Simple docker-compose for local development
+version: '3.8'
+
+services:
+  anancyio:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: anancyio-local
+    ports:
+      - "50080:80"
+    volumes:
+      - ./logs:/a_io/logs
+      - ./memory:/a_io/memory
+      - ./knowledge:/a_io/knowledge
+      - ./usr:/a_io/usr
+    environment:
+      - PYTHONUNBUFFERED=1

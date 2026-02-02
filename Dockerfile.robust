@@ -1,0 +1,93 @@
+# Production-ready Dockerfile for local development
+FROM python:3.11-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /a_io
+
+# Install ALL system dependencies including those for PDF, OCR, ML packages
+RUN apt-get update && apt-get install -y \
+    # Build essentials
+    build-essential \
+    gcc \
+    g++ \
+    gfortran \
+    pkg-config \
+    # SSL and security
+    libssl-dev \
+    libffi-dev \
+    # Math libraries for scipy/numpy
+    libopenblas-dev \
+    liblapack-dev \
+    libblas-dev \
+    # PDF processing (for pypdf, pdf2image, pymupdf)
+    libmupdf-dev \
+    mupdf-tools \
+    poppler-utils \
+    # OCR (for pytesseract)
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    libtesseract-dev \
+    # Image processing
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libwebp-dev \
+    # XML/HTML parsing
+    libxml2-dev \
+    libxslt1-dev \
+    # Git and version control
+    git \
+    # Network tools
+    curl \
+    wget \
+    # Cleanup
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip, setuptools, wheel
+RUN pip install --upgrade pip setuptools wheel
+
+# Pre-install heavy dependencies with specific versions to avoid conflicts
+RUN pip install --no-cache-dir \
+    "numpy>=1.24,<2.0" \
+    "scipy>=1.10,<2.0" \
+    "torch>=2.0.0" --index-url https://download.pytorch.org/whl/cpu \
+    "transformers>=4.30.0" \
+    "pillow>=10.0.0"
+
+# Copy requirements files
+COPY requirements.txt requirements2.txt ./
+
+# Install main requirements with better error handling
+RUN pip install --no-cache-dir -r requirements.txt || \
+    (echo "Some packages failed, retrying individually..." && \
+     cat requirements.txt | grep -v "^#" | grep -v "^$" | while read pkg; do \
+       pip install --no-cache-dir "$pkg" || echo "Skipped: $pkg"; \
+     done)
+
+# Install secondary requirements (optional packages)
+RUN pip install --no-cache-dir -r requirements2.txt || \
+    echo "Optional packages installation completed with warnings"
+
+# Install Playwright browsers (for browser-use)
+RUN playwright install-deps || true
+RUN playwright install chromium || true
+
+# Copy application code
+COPY . .
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /a_io/logs /a_io/memory /a_io/knowledge /a_io/usr /a_io/tmp && \
+    chmod -R 777 /a_io/logs /a_io/memory /a_io/knowledge /a_io/usr /a_io/tmp
+
+# Expose ports
+EXPOSE 80 443 9000-9009
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:80/health || exit 1
+
+# Run the application
+CMD ["python", "run_ui.py"]

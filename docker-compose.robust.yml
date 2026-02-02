@@ -1,0 +1,48 @@
+# Robust docker-compose for local development
+version: '3.8'
+
+services:
+  anancyio:
+    build:
+      context: .
+      dockerfile: Dockerfile.robust
+      # Increase build timeout
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    container_name: anancyio-local
+    restart: unless-stopped
+    ports:
+      - "50080:80"
+    volumes:
+      # Persistent data
+      - ./logs:/a_io/logs
+      - ./memory:/a_io/memory
+      - ./knowledge:/a_io/knowledge
+      - ./usr:/a_io/usr
+      - ./tmp:/a_io/tmp
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=development
+      - LOG_LEVEL=debug
+    # Resource limits to prevent system overload
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:80')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Better logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

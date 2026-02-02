@@ -1,0 +1,152 @@
+# Production Docker Compose configuration for AnancyIO
+# Usage: docker-compose -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  anancyio:
+    image: anancyioai/anancyio:latest
+    container_name: anancyio-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persistent data
+      - anancyio-data:/a_io/usr
+      - anancyio-logs:/a_io/logs
+      - anancyio-memory:/a_io/memory
+      - anancyio-knowledge:/a_io/knowledge
+      # Configuration (optional - for custom settings)
+      - ./conf:/a_io/conf:ro
+      # SSL certificates (if using HTTPS)
+      - ./certs:/certs:ro
+    environment:
+      # Application settings
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+      - WORKERS=${WORKERS:-4}
+      
+      # Security settings
+      - SECRET_KEY=${SECRET_KEY}
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
+      
+      # API keys (use secrets management in production)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Database settings (if applicable)
+      - DATABASE_URL=${DATABASE_URL}
+      
+      # Optional: External services
+      - REDIS_URL=${REDIS_URL}
+      - SEARXNG_URL=${SEARXNG_URL}
+      
+      # Monitoring
+      - SENTRY_DSN=${SENTRY_DSN}
+      
+    networks:
+      - anancyio-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: anancyio-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks:
+      - anancyio-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  # Nginx reverse proxy (optional - if not using external load balancer)
+  nginx:
+    image: nginx:alpine
+    container_name: anancyio-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
+      - nginx-cache:/var/cache/nginx
+    networks:
+      - anancyio-network
+    depends_on:
+      - anancyio
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Watchtower for automatic updates (optional)
+  watchtower:
+    image: containrrr/watchtower
+    container_name: anancyio-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=86400  # Check daily
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_NOTIFICATIONS=${WATCHTOWER_NOTIFICATIONS:-}
+      - WATCHTOWER_NOTIFICATION_URL=${WATCHTOWER_NOTIFICATION_URL:-}
+    networks:
+      - anancyio-network
+    command: anancyio-prod
+
+volumes:
+  anancyio-data:
+    driver: local
+  anancyio-logs:
+    driver: local
+  anancyio-memory:
+    driver: local
+  anancyio-knowledge:
+    driver: local
+  redis-data:
+    driver: local
+  nginx-cache:
+    driver: local
+
+networks:
+  anancyio-network:
+    driver: bridge

@@ -1,0 +1,33 @@
+# Build and run AnancyIO from this repo (no pre-built image needed).
+#
+# First time (build base, then app, then run):
+#   docker-compose build anancyio-base
+#   docker-compose build anancyio
+#   docker-compose up -d
+#
+# Then open http://localhost:50080
+# This repo is mounted at /a_io in the container.
+
+services:
+  # Base image (Kali + Python + deps). Build once; not run as a container.
+  anancyio-base:
+    build:
+      context: ./docker/base
+      dockerfile: Dockerfile
+    image: anancyio-base:local
+    profiles:
+      - build
+
+  # App image (builds on base, uses this repo). This is the only container that runs.
+  anancyio:
+    build:
+      context: .
+      dockerfile: DockerfileLocal
+      args:
+        BASE_IMAGE: anancyio-base:local
+    image: anancyio-local
+    container_name: anancyio
+    ports:
+      - "50080:80"
+    volumes:
+      - .:/a_io
