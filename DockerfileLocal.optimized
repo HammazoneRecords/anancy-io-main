@@ -1,0 +1,55 @@
+# Use the pre-built base image for A_IO
+# FROM anancyio-base:local
+FROM anancyioai/anancyio-base:latest
+
+# Set BRANCH to "local" if not provided
+ARG BRANCH=local
+ARG CACHE_DATE=none
+ENV BRANCH=$BRANCH
+
+# Copy filesystem files to root (configuration, scripts)
+COPY ./docker/run/fs/ /
+
+# Combine pre-installation and apt operations in single layer
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    if [ -f /etc/cron.d/* ]; then chmod 0644 /etc/cron.d/*; fi && \
+    bash /ins/setup_ssh.sh $BRANCH && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+# Copy current development files to git (only used in "local" branch)
+# This is placed after system setup to improve caching when only code changes
+COPY ./ /git/anancyio
+
+# Install A_IO with pip cache mount for faster rebuilds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/root/.cache/uv \
+    . /ins/setup_venv.sh $BRANCH && \
+    if [ "$BRANCH" != "local" ]; then \
+        git clone -b "$BRANCH" "https://github.com/anancyioai/anancyio" "/git/anancyio" || exit 1; \
+    else \
+        echo "Using local dev files in /git/anancyio"; \
+    fi && \
+    uv pip install -r /git/anancyio/requirements.txt && \
+    uv pip install -r /git/anancyio/requirements2.txt && \
+    bash /ins/install_playwright.sh $BRANCH && \
+    python /git/anancyio/preload.py --dockerized=true
+
+# Cache buster for final installation (when CACHE_DATE changes)
+RUN echo "cache buster $CACHE_DATE" && \
+    if [ "$BRANCH" != "local" ]; then rm -rf /git/anancyio; fi && \
+    bash /ins/install_A0.sh $BRANCH && \
+    . /ins/setup_venv.sh $BRANCH && \
+    pip cache purge && \
+    uv cache prune
+
+# Set executable permissions
+RUN chmod +x /exe/initialize.sh /exe/run_A_IO.sh /exe/run_searxng.sh /exe/run_tunnel_api.sh
+
+# Expose ports
+EXPOSE 22 80 9000-9009
+
+# Initialize runtime and switch to supervisord
+CMD ["/exe/initialize.sh", "$BRANCH"]

@@ -1,0 +1,53 @@
+{
+  "total": 11,
+  "completed": 5,
+  "next_feature": "Hacker CSI v2.0",
+  "features": {
+    "PromptSmith": {
+      "status": "completed",
+      "description": "Governance layer translating requests to MW-PS compliant prompts"
+    },
+    "MW-SHA": {
+      "status": "completed",
+      "description": "System Health Agent pre-classification gate"
+    },
+    "Expanded Risk Classifier": {
+      "status": "completed",
+      "description": "11-level risk classification with UNKNOWN as error"
+    },
+    "Witness Telemetry": {
+      "status": "completed",
+      "description": "Metadata-only logging subsystem for audit trails"
+    },
+    "TCP/TCPC": {
+      "status": "completed",
+      "description": "Trajectory Checkpoint Protocol and Controller for verifiable execution"
+    },
+    "Hacker CSI v2.0": {
+      "status": "pending",
+      "description": "Predictive adversarial analyst for CCF and MW-PL pipelines"
+    },
+    "9-State Lifecycle": {
+      "status": "pending",
+      "description": "Structural proof of governance with explicit state transitions"
+    },
+    "SAFE_INFO Fast Path": {
+      "status": "pending",
+      "description": "Bypass for safe informational queries"
+    },
+    "Classifier Failure Separation": {
+      "status": "pending",
+      "description": "Separate classifier errors from user risk levels"
+    },
+    "Versioned Policy Freeze Points": {
+      "status": "pending",
+      "description": "Immutable policy versions for defensibility"
+    },
+    "Simulation Testing": {
+      "status": "pending",
+      "description": "Comprehensive testing with deviation logging"
+    }
+  },
+  "last_updated": "2026-01-31T16:37:49-05:00",
+  "version": "1.0"
+}

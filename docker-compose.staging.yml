@@ -1,0 +1,69 @@
+# Staging environment Docker Compose configuration
+# Usage: docker-compose -f docker-compose.staging.yml up -d
+
+version: '3.8'
+
+services:
+  anancyio:
+    image: anancyioai/anancyio:develop
+    container_name: anancyio-staging
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - anancyio-staging-data:/a_io/usr
+      - anancyio-staging-logs:/a_io/logs
+      - anancyio-staging-memory:/a_io/memory
+      - anancyio-staging-knowledge:/a_io/knowledge
+      - ./conf:/a_io/conf:ro
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=debug
+      - WORKERS=2
+      - SECRET_KEY=${SECRET_KEY}
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - anancyio-staging-network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    container_name: anancyio-staging-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-staging-data:/data
+    networks:
+      - anancyio-staging-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  anancyio-staging-data:
+  anancyio-staging-logs:
+  anancyio-staging-memory:
+  anancyio-staging-knowledge:
+  redis-staging-data:
+
+networks:
+  anancyio-staging-network:
+    driver: bridge

@@ -1,0 +1,41 @@
+# Simplified Dockerfile for local development
+FROM python:3.11-slim
+
+WORKDIR /a_io
+
+# Install system dependencies including Fortran for scipy
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    gfortran \
+    libopenblas-dev \
+    liblapack-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and pre-install numpy/scipy with binary wheels
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir "numpy>=1.24,<2.0" "scipy>=1.10,<2.0"
+
+# Copy requirements
+COPY requirements.txt requirements2.txt ./
+
+# Install Python dependencies with error handling
+RUN pip install --no-cache-dir -r requirements.txt --no-build-isolation 2>&1 || echo "Installation completed with warnings"
+RUN pip install --no-cache-dir -r requirements2.txt 2>&1 || echo "Optional packages completed"
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /a_io/logs /a_io/memory /a_io/knowledge /a_io/usr
+
+# Expose ports
+EXPOSE 80
+
+# Run the application
+CMD ["python", "run_ui.py"]
