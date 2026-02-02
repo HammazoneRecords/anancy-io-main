@@ -2,13 +2,6 @@
 
 # `AnancyIO`
 
-<p align="center">
-    <a href="https://trendshift.io/repositories/11745" target="_blank"><img src="https://trendshift.io/api/badge/repositories/11745" alt="frdel%2Fanancyio | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
-
-[![AnancyIO Website](https://img.shields.io/badge/Website-agent--zero.ai-0A192F?style=for-the-badge&logo=vercel&logoColor=white)](https://anancyio.ai) [![Thanks to Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Thanks%20to%20Sponsors-FF69B4?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/anancyioai) [![Follow on X](https://img.shields.io/badge/X-Follow-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/AnancyIOai) [![Join our Discord](https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/B8KZKNsPpj) [![Subscribe on YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@AgentZeroFW) [![Connect on LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jan-tomasek/) [![Follow on Warpcast](https://img.shields.io/badge/Warpcast-Follow-5A32F3?style=for-the-badge)](https://warpcast.com/anancyio) 
-
-
 ## Documentation:
 
 [Introduction](#a-personal-organic-agentic-framework-that-grows-and-learns-with-you) •
@@ -22,7 +15,7 @@
 
 Or see DeepWiki generated documentation:
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/anancyioai/anancyio)
+
 
 </div>
 
@@ -35,7 +28,6 @@ AnancyIO now supports **Projects** – isolated workspaces with their own prompt
 
 
 
-[![Showcase](/docs/res/showcase-thumb.png)](https://youtu.be/MdzLhWWoxEs)
 
 
 
