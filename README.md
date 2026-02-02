@@ -22,13 +22,6 @@ This project is not just a tool - it's the beginning of a transformative journey
 
 # `AnancyIO`
 
-<p align="center">
-    <a href="https://trendshift.io/repositories/11745" target="_blank"><img src="https://trendshift.io/api/badge/repositories/11745" alt="frdel%2Fanancyio | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
-
-[![AnancyIO Website](https://img.shields.io/badge/Website-anancyio.ai-0A192F?style=for-the-badge&logo=vercel&logoColor=white)](https://anancyio.ai) [![Thanks to Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Thanks%20to%20Sponsors-FF69B4?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/anancyioai) [![Follow on X](https://img.shields.io/badge/X-Follow-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/AnancyIOai) [![Join our Discord](https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/B8KZKNsPpj) [![Connect on LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anancyio/) 
-
-
 ## Documentation:
 
 [Introduction](#a-personal-organic-agentic-framework-that-grows-and-learns-with-you) •
