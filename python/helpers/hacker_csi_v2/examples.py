@@ -9,11 +9,11 @@ CCF and MW-PL pipelines using the CSI framework.
 
 from pathlib import Path
 from typing import Dict, Any
-from ..csi_agent import HackerCSIResearchAgent, AnalysisMode
-from ..scenario_engine import AttackVector
-from ..risk_scorer import RiskScorer
-from ..governance_analyzer import GovernanceGapAnalyzer
-from ..research_register import ResearchGapsRegister
+from .csi_agent import HackerCSIResearchAgent, AnalysisMode
+from .scenario_engine import AttackVector
+from .risk_scorer import RiskScorer
+from .governance_analyzer import GovernanceGapAnalyzer
+from .research_register import ResearchGapsRegister
 
 
 # Example pipeline configurations
@@ -107,12 +107,10 @@ def basic_csi_analysis():
     print(f'Research Gaps: {len(report.research_gaps)}')
     print(f'Confidence: {report.confidence_level:.2f}')
 
-    print('
-Executive Summary:')
+    print('\nExecutive Summary:')
     print(report.executive_summary)
 
-    print('
-Recommendations:')
+    print('\nRecommendations:')
     for rec in report.recommendations:
         print(f'- {rec}')
 
@@ -121,8 +119,7 @@ Recommendations:')
 
 def comprehensive_system_analysis():
     """Example of comprehensive system-wide analysis."""
-    print('
-=== Comprehensive System Analysis Example ===')
+    print('\n=== Comprehensive System Analysis Example ===')
 
     # Initialize CSI agent with custom reports directory
     reports_dir = Path('./example_reports')
@@ -131,8 +128,7 @@ def comprehensive_system_analysis():
     # Analyze multiple pipelines
     results = {}
     for pipeline_name, config in EXAMPLE_PIPELINES.items():
-        print(f'
-Analyzing {pipeline_name}...')
+        print(f'\nAnalyzing {pipeline_name}...')
 
         report = csi_agent.analyze_pipeline(
             pipeline_config=config,
@@ -153,16 +149,14 @@ Analyzing {pipeline_name}...')
 
     # Generate summary report
     summary_file = csi_agent.export_analysis_summary()
-    print(f'
-Summary report saved: {summary_file}')
+    print(f'\nSummary report saved: {summary_file}')
 
     return results
 
 
 def scenario_engine_demo():
     """Demonstrate scenario engine capabilities."""
-    print('
-=== Scenario Engine Demo ===')
+    print('\n=== Scenario Engine Demo ===')
 
     from ..scenario_engine import ScenarioEngine, AttackVector
 
@@ -180,8 +174,7 @@ def scenario_engine_demo():
 
     # Display first few scenarios
     for i, scenario in enumerate(scenarios[:5]):
-        print(f'
-{i+1}. {scenario.title}')
+        print(f'\n{i+1}. {scenario.title}')
         print(f'   Vector: {scenario.attack_vector.value}')
         print(f'   Complexity: {scenario.complexity.value}')
         print(f'   Success Probability: {scenario.success_probability:.2f}')
@@ -189,16 +182,14 @@ def scenario_engine_demo():
 
     # Show scenarios by vector
     injection_scenarios = engine.get_scenario_by_vector(AttackVector.PROMPT_INJECTION)
-    print(f'
-Prompt injection scenarios available: {len(injection_scenarios)}')
+    print(f'\nPrompt injection scenarios available: {len(injection_scenarios)}')
 
     return scenarios
 
 
 def risk_scorer_demo():
     """Demonstrate risk scoring capabilities."""
-    print('
-=== Risk Scorer Demo ===')
+    print('\n=== Risk Scorer Demo ===')
 
     from ..risk_scorer import RiskScorer
 
@@ -212,8 +203,7 @@ def risk_scorer_demo():
             context={}
         )
 
-        print(f'
-{pipeline_name}:')
+        print(f'\n{pipeline_name}:')
         print(f'  Overall Score: {score.overall_score:.2f}')
         print(f'  Risk Level: {score.risk_level}')
         print(f'  Confidence: {score.confidence:.2f}')
@@ -228,16 +218,14 @@ def risk_scorer_demo():
         {'advanced_monitoring': -0.3, 'legacy_systems': 0.4}
     )
 
-    print('
-Added custom risk factor: custom_security')
+    print('\nAdded custom risk factor: custom_security')
 
     return scorer
 
 
 def governance_analysis_demo():
     """Demonstrate governance gap analysis."""
-    print('
-=== Governance Analysis Demo ===')
+    print('\n=== Governance Analysis Demo ===')
 
     from ..governance_analyzer import GovernanceGapAnalyzer
 
@@ -256,22 +244,19 @@ def governance_analysis_demo():
         severity_count[severity] = severity_count.get(severity, 0) + 1
 
         if severity == 'HIGH':
-            print(f'
-High Severity Gap: {gap.title}')
+            print(f'\nHigh Severity Gap: {gap.title}')
             print(f'  Category: {gap.category.value}')
             print(f'  Affected: {gap.affected_components}')
             print(f'  Root Cause: {gap.root_cause}')
 
-    print(f'
-Gap severity distribution: {severity_count}')
+    print(f'\nGap severity distribution: {severity_count}')
 
     return gaps
 
 
 def research_gaps_demo():
     """Demonstrate research gap identification."""
-    print('
-=== Research Gaps Demo ===')
+    print('\n=== Research Gaps Demo ===')
 
     from ..research_register import ResearchGapsRegister
 
@@ -289,8 +274,7 @@ def research_gaps_demo():
 
     # Display gaps by priority
     for gap in gaps:
-        print(f'
-{gap.title}')
+        print(f'\n{gap.title}')
         print(f'  Priority: {gap.priority.value}')
         print(f'  Category: {gap.category.value}')
         print(f'  Effort: {gap.estimated_effort}')
@@ -299,16 +283,14 @@ def research_gaps_demo():
     # Export register
     if gaps:
         export_file = register.export_gaps_register()
-        print(f'
-Research gaps register exported: {export_file}')
+        print(f'\nResearch gaps register exported: {export_file}')
 
     return gaps
 
 
 def integration_with_agent0_demo():
     """Demonstrate integration with Agent0 for full reports."""
-    print('
-=== Integration with Agent0 Demo ===')
+    print('\n=== Integration with Agent0 Demo ===')
 
     # This would typically be called from within Agent0
     # Here we simulate the integration
@@ -330,16 +312,14 @@ def integration_with_agent0_demo():
     print(f'Actionable Insights: {len(report.recommendations)} recommendations')
 
     # In real integration, this would be sent to Agent0's response system
-    print('
-Report would be delivered to Agent0 for user presentation')
+    print('\nReport would be delivered to Agent0 for user presentation')
 
     return report
 
 
 def run_all_examples():
     """Run all examples in sequence."""
-    print('Running all Hacker CSI v2.0 Examples...
-')
+    print('Running all Hacker CSI v2.0 Examples...\n')
 
     try:
         # Run examples
@@ -351,8 +331,7 @@ def run_all_examples():
         research_gaps = research_gaps_demo()
         integration_report = integration_with_agent0_demo()
 
-        print('
-=== All Examples Completed Successfully ===')
+        print('\n=== All Examples Completed Successfully ===')
         print(f'Basic analysis: {basic_report.target_pipeline}')
         print(f'Comprehensive analysis: {len(comprehensive_results)} pipelines')
         print(f'Scenario generation: {len(scenarios)} scenarios')

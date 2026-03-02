@@ -216,14 +216,11 @@ Key Findings:
 """
 
         if risk_score.overall_score > 0.7:
-            summary += "- High risk of adversarial exploitation"
-"
+            summary += "- High risk of adversarial exploitation\n"
         if gap_count > 5:
-            summary += "- Significant governance gaps detected
-"
+            summary += "- Significant governance gaps detected\n"
         if scenario_count >= 16:
-            summary += "- Comprehensive scenario coverage achieved
-"
+            summary += "- Comprehensive scenario coverage achieved\n"
 
         return summary
 

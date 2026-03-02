@@ -140,7 +140,7 @@ class ScenarioEngine:
             {
                 'title': 'Model Inversion Attack',
                 'attack_vector': AttackVector.MODEL_INVERSION,
-                'complexity': AttackVector.MEDIUM,
+                'complexity': AttackComplexity.MEDIUM,
                 'description': 'Extract sensitive training data through model queries',
                 'prerequisites': ['API access to model', 'Knowledge of model architecture'],
                 'execution_steps': [
